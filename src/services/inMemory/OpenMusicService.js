@@ -13,11 +13,9 @@ class OpenMusicService {
 
   addAlbum({name, year}) {
     const id = nanoid(16);
-    const insertedAt = new Date().toISOString();
-    const updateAt = insertedAt;
 
     const newAlbum = {
-      id, name, year, insertedAt, updateAt,
+      id, name, year,
     };
 
     this._album.push(newAlbum);
@@ -44,12 +42,12 @@ class OpenMusicService {
     if (index === -1) {
       throw new NotFoundError('Gagal memperbarui album. Id tidak ditemukan');
     }
-    const updateAt = new Date().toISOString();
+
     this._album[index]={
       ...this._album[index],
       name,
       year,
-      updateAt,
+
     };
   }
 
@@ -61,15 +59,13 @@ class OpenMusicService {
     this._album.splice(index, 1);
   }
 
-  addSong({title, year, genre, performer, duration}) {
+  addSong({title, year, genre, performer, duration, albumId}) {
     const id = nanoid(16);
-    const insertedAt = new Date().toISOString();
-    const updateAt = insertedAt;
 
     const newSong = {
-      title, year, genre, performer, duration, id, insertedAt, updateAt,
+      title, year, genre, performer, duration, id, albumId,
     };
-
+    // const album = this.getAlbumById(albumId);
     this._songs.push(newSong);
     const isSuccess = this._songs.filter((song)=>song.id===id).length>0;
     if (!isSuccess) {
@@ -98,12 +94,12 @@ class OpenMusicService {
     return index;
   }
 
-  editSongById(id, {title, year, genre, performer, duration}) {
+  editSongById(id, {title, year, genre, performer, duration, albumId}) {
     const index = this._songs.findIndex((song)=>song.id===id);
     if (index === -1) {
       throw new NotFoundError('Gagal memperbarui lagi. Id tidak ditemukan');
     }
-    const updateAt = new Date().toISOString();
+
     this._songs[index]={
       ...this._songs[index],
       title,
@@ -111,7 +107,7 @@ class OpenMusicService {
       genre,
       performer,
       duration,
-      updateAt,
+      albumId,
     };
   }
 

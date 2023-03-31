@@ -1,14 +1,22 @@
 /* eslint-disable linebreak-style */
 const InvariantError = require('../../exception/InvariantError');
-const {OpenMusicPayloadSchema} = require('./schema');
+const {albumPayloadSchema, songPayloadSchema} = require('./schema');
 
-const OpenMusicValidator = {
-  validateOpenMusicPayload: (payload)=>{
-    const validationResult = OpenMusicPayloadSchema.validate(payload);
+const AlbumValidator = {
+  validateAlbumPayload: (payload)=>{
+    const validationResult = albumPayloadSchema.validate(payload);
+    if (validationResult.error) {
+      throw new InvariantError(validationResult.error.message);
+    }
+  },
+};
+const SongsValidator = {
+  validateSongPayload: (payload) => {
+    const validationResult = songPayloadSchema.validate(payload);
     if (validationResult.error) {
       throw new InvariantError(validationResult.error.message);
     }
   },
 };
 
-module.exports = OpenMusicValidator;
+module.exports = {AlbumValidator, SongsValidator};

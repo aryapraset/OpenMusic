@@ -3,16 +3,18 @@
 /* eslint-disable linebreak-style */
 // const autoBind = require('auto-bind');
 
+const autoBind = require('auto-bind');
+
 class OpenMusicHandler {
   constructor(service, validator) {
     this._service = service;
     this._validator = validator;
 
-    // autoBind(this);
+    autoBind(this);
   }
 
   async postAlbumHandler(request, h) {
-    this._validator.validateOpenMusicPayload(request.payload);
+    this._validator.validateAlbumPayload(request.payload);
     const {name, year} = request.payload;
     const albumId = await this._service.addAlbum({name, year});
 
@@ -26,7 +28,7 @@ class OpenMusicHandler {
   }
 
   async getAlbumByIdHandler(request, h) {
-    this._validator.validateOpenMusicPayload(request.payload);
+    this._validator.validateAlbumPayload(request.payload);
     const {id} = request.params;
     const album = await this._service.getAlbumById(id);
 
@@ -59,7 +61,7 @@ class OpenMusicHandler {
   }
 
   async postSongHandler({payload}, h) {
-    this._validator.validateOpenMusicPayload(request.payload);
+    this._validator.validateSongPayload(request.payload);
     const songId = await this._service.addSong(payload);
     const response = h.response({
       status: 'success',
@@ -81,21 +83,21 @@ class OpenMusicHandler {
     };
   }
 
-  async getSongByIdHandler(request) {
+  async getSongByIdHandler(request, h) {
     const {id} = request.params;
 
     const song = await this._service.getSongById(id);
 
-    return {
+    const response = h.response({
       status: 'success',
-      data: {
-        song,
-      },
-    };
+      data: {song},
+    });
+    response.code(200);
+    return response;
   }
 
   async putSongByIdHandler(request) {
-    this._validator.validateOpenMusicPayload(request.payload);
+    this._validator.validateSongPayload(request.payload);
     const {id} = request.params;
     await this._service.editSongById(id, request.payload);
 
