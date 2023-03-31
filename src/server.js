@@ -1,16 +1,18 @@
 /* eslint-disable linebreak-style */
+require('dotenv').config();
+
 const Hapi = require('@hapi/hapi');
-const OpenMusicService = require('./services/inMemory/OpenMusicService');
+const OpenMusicService = require('./services/postgres/OpenMusicService');
 const music = require('./api/music');
 const ClientError = require('./exception/ClientError');
-const OpenMusicValidator = require('./validator/music');
+const Validator = require('./validator/music');
 
 const init = async () => {
   const openMusicService = new OpenMusicService();
 
   const server = Hapi.server({
-    port: 5000,
-    host: process.env.NODE_ENV !== 'production' ? 'localhost' : '0.0.0.0',
+    port: process.env.PORT,
+    host: process.env.HOST,
     routes: {
       cors: {
         origin: ['*'],
@@ -22,7 +24,7 @@ const init = async () => {
     plugin: music,
     options: {
       service: openMusicService,
-      validator: OpenMusicValidator,
+      validator: Validator,
     },
   });
 
@@ -53,5 +55,6 @@ const init = async () => {
   await server.start();
   console.log(`Server berjalan pada ${server.info.uri}`);
 };
+
 
 init();
