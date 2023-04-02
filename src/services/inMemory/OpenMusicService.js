@@ -31,6 +31,7 @@ class OpenMusicService {
   getAlbumById(id) {
     const album = this._album.filter((n)=>n.id===id)[0];
     if (!album) {
+      console.log();
       throw new NotFoundError('Album tidak ditemukan');
     }
     return album;
@@ -47,7 +48,6 @@ class OpenMusicService {
       ...this._album[index],
       name,
       year,
-
     };
   }
 

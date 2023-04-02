@@ -1,8 +1,4 @@
-/* eslint-disable linebreak-style */
 /* eslint-disable require-jsdoc */
-/* eslint-disable linebreak-style */
-// const autoBind = require('auto-bind');
-
 const autoBind = require('auto-bind');
 
 class OpenMusicHandler {
@@ -14,7 +10,7 @@ class OpenMusicHandler {
   }
 
   async postAlbumHandler(request, h) {
-    this._validator.validateAlbumPayload(request.payload);
+    this._validator.AlbumValidator.validateAlbumPayload(request.payload);
     const {name, year} = request.payload;
     const albumId = await this._service.addAlbum({name, year});
 
@@ -23,12 +19,12 @@ class OpenMusicHandler {
       message: 'Album berhasil ditambahkan',
       data: {albumId},
     });
+    console.log(response.message);
     response.code(201);
     return response;
   }
 
   async getAlbumByIdHandler(request, h) {
-    this._validator.validateAlbumPayload(request.payload);
     const {id} = request.params;
     const album = await this._service.getAlbumById(id);
 
@@ -42,6 +38,7 @@ class OpenMusicHandler {
   }
 
   async putAlbumByIdHandler(request) {
+    this._validator.AlbumValidator.validateAlbumPayload(request.payload);
     const {id} = request.params;
     await this._service.editAlbumById(id, request.payload);
 
@@ -61,8 +58,9 @@ class OpenMusicHandler {
   }
 
   async postSongHandler({payload}, h) {
-    this._validator.validateSongPayload(request.payload);
+    this._validator.SongsValidator.validateSongPayload(payload);
     const songId = await this._service.addSong(payload);
+
     const response = h.response({
       status: 'success',
       message: 'Lagu berhasil ditambahkan',
@@ -92,12 +90,13 @@ class OpenMusicHandler {
       status: 'success',
       data: {song},
     });
+    console.log(response.message);
     response.code(200);
     return response;
   }
 
   async putSongByIdHandler(request) {
-    this._validator.validateSongPayload(request.payload);
+    this._validator.SongsValidator.validateSongPayload(request.payload);
     const {id} = request.params;
     await this._service.editSongById(id, request.payload);
 

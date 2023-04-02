@@ -24,8 +24,9 @@ exports.up = (pgm) => {
     duration: {
       type: 'INTEGER',
     },
-    albumId: {
+    albumid: {
       type: 'VARCHAR(50)',
+      references: 'album(id)',
       onDelete: 'CASCADE',
     },
   });

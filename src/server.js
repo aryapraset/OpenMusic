@@ -1,11 +1,10 @@
-/* eslint-disable linebreak-style */
 require('dotenv').config();
 
 const Hapi = require('@hapi/hapi');
 const OpenMusicService = require('./services/postgres/OpenMusicService');
 const music = require('./api/music');
 const ClientError = require('./exception/ClientError');
-const Validator = require('./validator/music');
+const {AlbumValidator, SongsValidator} = require('./validator/music');
 
 const init = async () => {
   const openMusicService = new OpenMusicService();
@@ -24,12 +23,13 @@ const init = async () => {
     plugin: music,
     options: {
       service: openMusicService,
-      validator: Validator,
+      validator: {AlbumValidator, SongsValidator},
     },
   });
 
   server.ext('onPreResponse', (request, h)=>{
     const {response} = request;
+
     if (response instanceof Error) {
       if (response instanceof ClientError) {
         const newResponse = h.response({
@@ -42,9 +42,10 @@ const init = async () => {
       if (!response.isServer) {
         return h.continue;
       }
+      console.log(response.message);
       const newResponse = h.response({
-        status: 'error',
-        message: 'Terjadi kegagalan pada server kami',
+        status: 'fail',
+        message: response.message,
       });
       newResponse.code(500);
       return newResponse;

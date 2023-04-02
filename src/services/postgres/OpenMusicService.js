@@ -15,7 +15,7 @@ class OpenMusicService {
     const id = nanoid(16);
 
     const query = {
-      text: 'INSERT INTO album VALUE($1,$2,$3) RETURNING id',
+      text: 'INSERT INTO album VALUES($1,$2,$3) RETURNING id',
       values: [id, name, year],
     };
 
@@ -40,7 +40,7 @@ class OpenMusicService {
   }
   async editAlbumById(id, {name, year}) {
     const query = {
-      text: 'UPDATE album SET name = $1, $2=year WHERE id = $3 RETURNING id',
+      text: 'UPDATE album SET name = $1, year = $2 WHERE id = $3 RETURNING id',
       values: [name, year, id],
     };
     const result = await this._pool.query(query);
@@ -61,12 +61,12 @@ class OpenMusicService {
       throw new NotFoundError('Album gagal dihapus, Id tidak ditemukan');
     }
   }
-  async addSong({title, year, genre, performer, duration, albumId}) {
+  async addSong({title, year, performer, genre, duration, albumId}) {
     const id = nanoid(16);
 
     const query = {
-      text: 'TEXT INTO songs VALUES($1,$2,$3, $4, $5,$6) RETURNING id',
-      values: [id, title, year, genre, performer, duration, albumId],
+      text: 'INSERT INTO songs VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING id',
+      values: [id, title, year, performer, genre, duration, albumId],
     };
 
     const result = await this._pool.query(query);
@@ -77,7 +77,7 @@ class OpenMusicService {
     return result.rows[0].id;
   }
   async getAllSongs() {
-    const result = await this._pool.query('SELECT * FROM songs');
+    const result = await this._pool.query('SELECT id, title, performer FROM songs');
     return result.rows.map(mapDBToModelSong);
   }
   async getSongById(id) {
@@ -90,7 +90,7 @@ class OpenMusicService {
     if (!result.rows.length) {
       throw new NotFoundError('Lagu tidak ditemukan');
     }
-    return result.rowCount.map(mapDBToModelSong)[0];
+    return result.rows.map(mapDBToModelSong)[0];
   }
   async editSongById(id, {title, year, genre, performer, duration, albumId}) {
     const query = {
