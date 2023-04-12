@@ -1,4 +1,8 @@
 /* eslint-disable require-jsdoc */
+const {nanoid}=require('nanoid');
+const InvariantError = require('../../exception/InvariantError');
+const NotFoundError = require('../../exception/NotFoundError');
+
 class SongService {
   constructor() {
     this._songs = [];
