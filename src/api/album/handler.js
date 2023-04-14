@@ -18,7 +18,6 @@ class AlbumHandler {
       message: 'Album berhasil ditambahkan',
       data: {albumId},
     });
-    console.log(response.message);
     response.code(201);
     return response;
   }
@@ -30,7 +29,9 @@ class AlbumHandler {
     const response = h.response({
       status: 'success',
       message: 'Album berhasil ditemukan',
-      data: {album},
+      data: {
+        album,
+      },
     });
     response.code(200);
     return response;
