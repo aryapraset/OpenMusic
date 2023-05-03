@@ -9,12 +9,20 @@ exports.up = (pgm) => {
       primaryKey: true,
     },
     name: {
-      type: 'TEXT',
+      type: 'VARCHAR(50)',
       notNull: true,
     },
     owner: {
-      type: 'TEXT',
+      type: 'VARCHAR(50)',
       notNull: true,
+    },
+  }, {
+    constraints: {
+      foreignKeys: {
+        references: 'users(id)',
+        columns: 'owner',
+        onDelete: 'CASCADE',
+      },
     },
   });
 };
