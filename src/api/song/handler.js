@@ -41,7 +41,6 @@ class SongHandler {
       status: 'success',
       data: {song},
     });
-    console.log(response.message);
     response.code(200);
     return response;
   }
