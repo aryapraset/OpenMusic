@@ -5,7 +5,7 @@ const {Pool} = require('pg');
 class StorageService {
   constructor(folder, cacheService) {
     this._folder = folder;
-    this._pool = new Pool;
+    this._pool = new Pool();
     this._cacheService = cacheService;
 
 
