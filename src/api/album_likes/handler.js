@@ -13,7 +13,7 @@ class AlbumLikesHandler {
     const {id: credentialId} = request.auth.credentials;
     await this._service.verifyUserLiked(id, credentialId);
 
-    await this._service.addLikeToAlbum(id, credentialId);
+    await this._service.addLikesToAlbum(id, credentialId);
 
     const response = h.response({
       status: 'success',

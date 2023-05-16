@@ -11,12 +11,15 @@ class AlbumHandler {
   async postAlbumHandler(request, h) {
     this._validator.validateAlbumPayload(request.payload);
     const {name, year} = request.payload;
+
     const albumId = await this._service.addAlbum({name, year});
 
     const response = h.response({
       status: 'success',
       message: 'Album berhasil ditambahkan',
-      data: {albumId},
+      data: {
+        albumId
+      },
     });
     response.code(201);
     return response;
@@ -24,7 +27,33 @@ class AlbumHandler {
 
   async getAlbumByIdHandler(request, h) {
     const {id} = request.params;
-    const album = await this._service.getAlbumById(id);
+    const {result, cached} = await this._service.getAlbumById(id);
+    const datas = result.rows;
+    let album;
+
+    const dataResponse = {
+      id: datas[0].album_id,
+      name: datas[0].album_name,
+      year: datas[0].album_year,
+      coverUrl: datas[0].cover,
+    };
+
+    if (datas[0].id === null) {
+      album = {
+        ...dataResponse,
+        songs: [],
+      };
+    } else {
+      const songs = datas.map((data)=>({
+        id: data.id,
+        title: data.title,
+        performer: data.performer,
+      }));
+      album = {
+        ...dataResponse,
+        songs,
+      };
+    }
 
     const response = h.response({
       status: 'success',
@@ -33,7 +62,9 @@ class AlbumHandler {
         album,
       },
     });
-    response.code(200);
+    if (cached) {
+      response.header('X-Data-Source', 'cache');
+    }
     return response;
   }
 
