@@ -14,8 +14,8 @@ exports.up = (pgm) => {
       notNull: true,
     },
     cover: {
-      type: 'TEXT', 
-    }
+      type: 'TEXT',
+    },
   });
 };
 
