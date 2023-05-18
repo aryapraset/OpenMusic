@@ -18,7 +18,7 @@ class AlbumHandler {
       status: 'success',
       message: 'Album berhasil ditambahkan',
       data: {
-        albumId
+        albumId,
       },
     });
     response.code(201);
@@ -84,7 +84,7 @@ class AlbumHandler {
     await this._service.deleteAlbumById(id);
     return {
       status: 'success',
-      message: 'Catatan berhasil dihapus',
+      message: 'Album berhasil dihapus',
     };
   }
 }

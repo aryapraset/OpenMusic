@@ -29,7 +29,7 @@ class StorageService {
 
   async addAlbumCover(filename, albumId) {
     const query = {
-      text: 'UPDATE albums SET cover = $1 WHERE id = $2',
+      text: 'UPDATE album SET cover = $1 WHERE id = $2',
       values: [filename, albumId],
     };
     await this._pool.query(query);

@@ -1,6 +1,5 @@
 /* eslint-disable max-len */
 /* eslint-disable require-jsdoc */
-const autoBind = require('auto-bind');
 const config = require('../../utils/config');
 
 class UploadsHandler {
@@ -8,7 +7,7 @@ class UploadsHandler {
     this._service = service;
     this._validator = validator;
 
-    autoBind(this);
+    this.postUploadAlbumCoverHandler = this.postUploadAlbumCoverHandler.bind(this);
   }
 
   async postUploadAlbumCoverHandler(request, h) {
@@ -21,7 +20,7 @@ class UploadsHandler {
         cover.hapi,
     );
 
-    const coverUrl = `http://${config.app.host}:${config.app.port}/upload/images/${filename}`;
+    const coverUrl = `http://${config.app.host}:${config.app.port}/uploads/images/${filename}`;
     await this._service.addAlbumCover(coverUrl, id);
 
     const response = h.response({
